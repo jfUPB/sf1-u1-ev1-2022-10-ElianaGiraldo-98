@@ -46,7 +46,7 @@ void task1() {
   b3 = digitalRead(33);
 
   digitalWrite(LED_COUNT, HIGH);
-  static uint8_t counter = 20;// ahora vrmos si lo ponemos en 0
+  static uint8_t counter = 20;
   static uint32_t oldTime = 0;
   uint32_t newTime;
   newTime = millis();
@@ -64,7 +64,6 @@ void task1() {
     }
 
     if (ban == 1) {
-      // Se llama la FUNCION
       if (b1 == 0) {
         var = 1;
         i = i + 1;
@@ -84,35 +83,32 @@ void task1() {
         i = 0;
         // task2(claveButton, clavePrueba);
         Serial.print(task2(claveButton, clavePrueba));
-
       }
-
     }
-
+     
     if (b3 == 0 or ban == 1) {
       ban = 1;
       counter = counter - 1;
-
       //Serial.print(counter);
+       
       if (counter % 2 == 0 ) {
         digitalWrite(BOMB_OUT, HIGH);
       }
       else {
         digitalWrite(BOMB_OUT, LOW);
       }
-
     }
 
     if (counter == 0) {
       counter = 20;
       ban = 0;
     }
-
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.setFont(ArialMT_Plain_16);
     display.clear();
     display.drawString(20, 16, String(counter));
   }
+   
   // Serial.println(millis());
   //Serial.println("drawing");
   display.display();
@@ -127,7 +123,6 @@ boolean task2(int claveButton[], int clavePrueba[]) {
       sumador = sumador + 1;
     }
   }
-
   if (sumador == 7) {
     return true;
   }
