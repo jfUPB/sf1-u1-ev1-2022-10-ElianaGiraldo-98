@@ -134,3 +134,116 @@ boolean task2(int claveButton[], int clavePrueba[]) {
 void loop() {
   task1();
 }
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Marzo 6 2022
+#include <SSD1306Wire.h>
+
+#define BOMB_OUT 25
+#define LED_COUNT 26
+#define UP_BTN 13
+#define DOWN_BTN 32
+#define ARM_BTN 33
+
+void taskSerial();
+void taskButtons();
+void taskBomb();
+
+// Selecciona uno según tu display.
+//SSD1306Wire display(0x3c, SDA, SCL, GEOMETRY_64_48);
+
+//Variables globales
+
+bool evButtons = false;
+uint8_t evButtons = 0;
+
+void setup() {
+  taskSerial();
+  taskButtons();
+  taskBomb();
+}
+
+void taskSerial() {
+  enum class SerialStates {INIT, WAITING_COMMANDS};
+  static SerialStates serialStates =  SerialStates::INIT;
+
+  switch (serialStates) {
+    case SerialStates::INIT: {
+        Serial.begin(115200);
+        serialStates = SerialStates::WAITING_COMMANDS;
+        break;
+      }
+    case SerialStates::WAITING_COMMANDS: {
+        if (Serial.available() > 0) {
+          Serial.read(); 
+        }
+      }
+  }
+}
+
+void taskButtons() {
+
+  enum class ButtonsStates {INIT, WAITING_PRESS, WAITING_STABLE, WAITING_RELEASE};
+  static ButtonsStates buttonsStates =  ButtonsStates::INIT;
+  static uint32_t referenceTime = millis();
+  const uint32_t timeOutState = 100; //revisar bien el tiempo 
+  //static uint8_t inputPinStableValue; // PENDIENTE
+
+  switch (buttonsStates) {
+    case ButtonsStates::INIT: {
+        pinMode(UP_BTN, INPUT_PULLUP);
+        pinMode(DOWN_BTN, INPUT_PULLUP);
+        pinMode(ARM_BTN, INPUT_PULLUP);
+        buttonsStates = ButtonsStates::WAITING_PRESS;
+        break;
+      }
+    case ButtonsStates::WAITING_PRESS:{
+     
+        }
+      }
+  }
+}
+
+void taskBomb(){
+  
+  static SSD1306Wire display(0x3c, SDA, SCL, GEOMETRY_64_48);
+  enum class BombStates{INIT, WAITING_CONFIG, COUNTING, BOMB};
+  static BombStates bombStates = BombStates::INIT;
+  static uint8_t counter;
+  static uint8_t passwordS[7] = {UP_BTN,UP_BTN,DOWN_BTN,DOWN_BTN UP_BTN, DOWN_BTN, ARM_BTN};
+  static uint8_t password[3] = {0,0,0,0,0,0,0};
+  static uint8_t passwordCount = 0;
+  
+  display.init();
+  display.setContrast(255);
+  display.clear();
+  static uint8_t counter = 0;
+  static uint32_t oldTime = 0;
+  uint32_t newTime;
+  static int x=10;
+  static int y=20;
+  }
+
+
+/*
+iif (ppasswordCount == 3) {
+bool disarm = true;
+for (int i = 0; i < 3; i++) {
+if (password[i] != passwordS[i]) {
+passwordCount = 0;
+disarm = false;
+break;
+}
+}
+if (disarm == true) {
+bombStates = BombStates :: WAITING_CONFIG;
+counter = 20;
+display.clear();
+display.drawString(10, 20, String("Disarm"));
+display.display();
+  */
+void loop() {
+  taskSerial();
+  taskButtons();
+  taskBomb();
+}
